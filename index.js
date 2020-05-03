@@ -27,6 +27,7 @@ module.exports = function AwesompleteUtil() {
         _AWE_SELECT = _AWE + 'select',
         _CLS_FOUND = 'awe-found',
         _CLS_NOT_FOUND = 'awe-not-found',
+        _CLS_LOADING = 'awe-loading',
         $ = Awesomplete.$; /* shortcut for document.querySelector */
 
     //
@@ -105,6 +106,7 @@ module.exports = function AwesompleteUtil() {
                 } else if (utilprops.changed) {  /* if input is changed */
                   utilprops.prevSelected = result;  /* new result      */
                   classList.remove(_CLS_NOT_FOUND); /* remove class   */
+                  classList.remove(_CLS_LOADING); /* remove class   */
                   classList.add(_CLS_FOUND);        /* add css class */
                   _fire(input, _AWE_MATCH, result); /* fire event   */
                 }
@@ -186,6 +188,11 @@ module.exports = function AwesompleteUtil() {
               prop;
           if (xhr.status === 200) {
             data = JSON.parse(xhr.responseText);
+            if(awe && awe.input){
+              setTimeout(function(){
+                awe.input.classList.remove(_CLS_LOADING);
+              }, 500)
+            }
             if (awe.utilprops.convertResponse) data = awe.utilprops.convertResponse(data);
             if (!Array.isArray(data)) {
               if (awe.utilprops.limit === 0 || awe.utilprops.limit === 1) {
@@ -216,6 +223,11 @@ module.exports = function AwesompleteUtil() {
         // Perform suggestion list lookup for the current value and validate. Use ajax when there is an url specified.
         function _lookup(awe, val) {
           var xhr;
+          var loadingFn = function (){
+            if(awe && awe.input){
+              awe.input.classList.add(_CLS_LOADING)
+            }
+          }
           if (awe.utilprops.url) {
             // are we still interested in this response?
             if (_ifNeedListUpdate(awe, val, val)) {
@@ -225,7 +237,8 @@ module.exports = function AwesompleteUtil() {
                                   awe.utilprops.urlEnd,
                                   awe.utilprops.loadall ? '' : val, 
                                   _onLoad.bind({awe: awe, xhr: xhr, queryVal: val}),
-                                  xhr
+                                  xhr,
+                                  loadingFn
                                 );
             } else {
               _matchValue(awe, awe.utilprops.prepop);
@@ -241,6 +254,7 @@ module.exports = function AwesompleteUtil() {
           // IE11 only handles the first parameter of the remove method.
           classList.remove(_CLS_NOT_FOUND);
           classList.remove(_CLS_FOUND);
+          classList.remove(_CLS_LOADING);
           _fire(elem, _AWE_MATCH, []);
         }
 
@@ -320,6 +334,7 @@ module.exports = function AwesompleteUtil() {
                   if (elem.classList && elem.classList.remove) {
                     // it might be another awesomplete control, if so the input is not wrong anymore because it's changed now
                     elem.classList.remove(_CLS_NOT_FOUND);
+                    elem.classList.remove(_CLS_LOADING);
                   }
                 } else if ('undefined' !== typeof elem.src) {  /* is it an image tag? */
                   elem.src = val;
@@ -436,9 +451,10 @@ module.exports = function AwesompleteUtil() {
     return {
 
         // ajax call for url + val + urlEnd. fn is the callback function. xhr parameter is optional.
-        ajax: function(url, urlEnd, val, fn, xhr) {
+        ajax: function(url, urlEnd, val, fn, xhr, loadingFn) {
           xhr = xhr || new XMLHttpRequest();
           xhr.open('GET', url + encodeURIComponent(val) + (urlEnd || ''));
+          xhr.onprogress = loadingFn;
           xhr.onload = fn;
           xhr.send();
           return xhr;
