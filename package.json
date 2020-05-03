@@ -1,4 +1,7 @@
 {
   "name": "awesomplete-util",
-  "version": "1.0.2s"
+  "version": "1.0.2s",
+  "bugs": {
+    "url": "https://github.com/PascalMayr/awesomplete-util"
+  }
 }
