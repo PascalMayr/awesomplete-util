@@ -14,7 +14,7 @@
  * License: MIT
  *
  */
-var AwesompleteUtil = function() {
+module.exports = function AwesompleteUtil() {
 
     //
     // event names and css classes

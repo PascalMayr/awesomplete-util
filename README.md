@@ -1,4 +1,4 @@
-# AwesompleteUtil
+# AwesompleteUtil as npm module
 
 Javascript library that utilizes Lea Verou's autocomplete / autosuggest / typeahead / inputsearch [Awesomplete widget](https://leaverou.github.io/awesomplete/index.html). It adds the following features:
 
