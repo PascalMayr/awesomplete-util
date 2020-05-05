@@ -1,3 +1,5 @@
+[![npm](https://img.shields.io/npm/v/awesomplete-util.svg)](https://www.npmjs.com/package/awesomplete-util)
+
 # AwesompleteUtil 
 
 Javascript library by [nico-amsterdam](https://github.com/nico-amsterdam) as npm module that utilizes Lea Verou's autocomplete / autosuggest / typeahead / inputsearch [Awesomplete widget](https://leaverou.github.io/awesomplete/index.html). It adds the following features:
