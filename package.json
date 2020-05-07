@@ -3,5 +3,9 @@
   "version": "1.0.5",
   "bugs": {
     "url": "https://github.com/PascalMayr/awesomplete-util"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PascalMayr/awesomplete-util"
   }
 }
